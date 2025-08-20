@@ -51,6 +51,11 @@ module.exports.updateWorkout = async (req, res, next) => {
         runValidators: true,
       }
     );
+
+    if (!workout) {
+      return res.status(404).json({ message: "Workout not found" });
+    }
+
     return res.status(200).json({ workout });
   } catch (error) {
     next(error);

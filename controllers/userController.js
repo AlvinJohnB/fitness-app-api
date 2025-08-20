@@ -37,7 +37,7 @@ module.exports.loginUser = async (req, res) => {
     const user = await User.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = authMiddleware.createAccessToken(user);
-      res.status(200).json({ token });
+      res.status(200).json({ access: token });
     } else {
       res.status(401).json({ message: "Invalid email or password" });
     }
