@@ -30,7 +30,6 @@ module.exports.getMyWorkOuts = async (req, res, next) => {
 
 module.exports.updateWorkout = async (req, res, next) => {
   const { name, duration } = req.body;
-  const userId = req.user.id;
 
   if (!name || !duration) {
     return res.status(400).json({ message: "Name and duration are required" });
@@ -38,10 +37,7 @@ module.exports.updateWorkout = async (req, res, next) => {
 
   try {
     const workout = await Workout.findByIdAndUpdate(
-      {
-        _id: req.params.id,
-        userId: userId,
-      },
+      req.params.id,
       {
         name,
         duration,
@@ -56,7 +52,7 @@ module.exports.updateWorkout = async (req, res, next) => {
       return res.status(404).json({ message: "Workout not found" });
     }
 
-    return res.status(200).json({ workout });
+    return res.status(200).json({ message: "Updated workout", workout });
   } catch (error) {
     next(error);
   }
@@ -65,9 +61,7 @@ module.exports.updateWorkout = async (req, res, next) => {
 module.exports.completeWorkoutStatus = async (req, res, next) => {
   try {
     const workout = await Workout.findByIdAndUpdate(
-      {
-        _id: req.params.id,
-      },
+      req.params.id,
       {
         status: "completed",
       },
@@ -75,10 +69,11 @@ module.exports.completeWorkoutStatus = async (req, res, next) => {
         new: true,
       }
     );
+
     if (!workout) {
       return res.status(404).json({ message: "Workout not found" });
     }
-    return res.status(200).json({ workout });
+    return res.status(200).json({ message: "Workout completed", workout });
   } catch (error) {
     next(error);
   }
