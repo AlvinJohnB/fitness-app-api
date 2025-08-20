@@ -52,7 +52,9 @@ module.exports.updateWorkout = async (req, res, next) => {
       return res.status(404).json({ message: "Workout not found" });
     }
 
-    return res.status(200).json({ message: "Updated workout", workout });
+    return res
+      .status(200)
+      .json({ message: "Updated workout", updatedWorkout: workout });
   } catch (error) {
     next(error);
   }
@@ -60,8 +62,8 @@ module.exports.updateWorkout = async (req, res, next) => {
 
 module.exports.completeWorkoutStatus = async (req, res, next) => {
   try {
-    const workout = await Workout.findByIdAndUpdate(
-      req.params.id,
+    const workout = await Workout.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
       {
         status: "completed",
       },
@@ -73,7 +75,9 @@ module.exports.completeWorkoutStatus = async (req, res, next) => {
     if (!workout) {
       return res.status(404).json({ message: "Workout not found" });
     }
-    return res.status(200).json({ message: "Workout completed", workout });
+    return res
+      .status(200)
+      .json({ message: "Workout completed", updatedWorkout: workout });
   } catch (error) {
     next(error);
   }
