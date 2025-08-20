@@ -3,9 +3,9 @@ const bcrypt = require("bcryptjs");
 const authMiddleware = require("../middlewares/authMiddleware.js");
 
 module.exports.registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { email, password } = req.body;
 
-  if (username && email && password) {
+  if (email && password) {
     if (!email.includes("@")) {
       return res.status(400).json({ message: "Invalid email format" });
     }
@@ -17,7 +17,6 @@ module.exports.registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
-      username,
       email,
       password: hashedPassword,
     });
